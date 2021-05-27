@@ -12,9 +12,10 @@ except ImportError:
 from jinja2 import escape
 from jinja2.utils import generate_lorem_ipsum
 from flask import Flask, make_response, request, redirect, url_for, abort, session, jsonify
+from flask_ngrok import run_with_ngrok
 
 app = Flask(__name__)
-
+run_with_ngrok(app)
 
 # get name value from query string and cookie
 @app.route('/')
