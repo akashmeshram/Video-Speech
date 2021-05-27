@@ -36,6 +36,11 @@ def transcribe():
     response = '<h1>Transcribe Sucessfully</h1>' # escape name to avoid XSS
     return response
 
+@app.route('/get-transcript')
+def getTranscript():
+    f = open("output/movie.srt", "r")
+    return f.read()
+
 ydl_opts = {
     'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]',
     'outtmpl': 'movie.%(ext)s',
@@ -44,8 +49,15 @@ ydl_opts = {
 def videoupload():
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
       ydl.download(['https://www.youtube.com/watch?v=rb_hmW-WiQg'])
-    response = '<h1>Uploaded Sucessfully</h1>'# escape name to avoid XSS
+    response = 'file uploaded successfully'
     return response
+
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file():
+   if request.method == 'POST':
+      f = request.files['file']
+      f.save(secure_filename(f.filename))
+      return 'file uploaded successfully'
 
 # 404
 @app.route('/404')
