@@ -33,6 +33,8 @@ def hello():
 @app.route('/transcribe')
 def transcribe():
     main()
+    response = '<h1>Transcribe Sucessfully</h1>' # escape name to avoid XSS
+    return response
 
 ydl_opts = {
     'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]',
