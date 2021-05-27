@@ -32,3 +32,5 @@ def hello():
 @app.route('/404')
 def not_found():
     abort(404)
+
+app.run()
