@@ -13,3 +13,4 @@ tqdm==4.44.1
 flask==1.1.2
 jinja2==2.11.1
 flask_ngrok
+youtube_dl
