@@ -78,12 +78,14 @@ def main():
     global line_count
     print("AutoSub\n")
         
-    parser = argparse.ArgumentParser(description="AutoSub")
-    parser.add_argument('--file', required=True,
-                        help='Input video file')
-    parser.add_argument('--vtt', dest="vtt", action="store_true",
-                        help='Output a vtt file with cue points for individual words instead of a srt file')
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description="AutoSub")
+    # parser.add_argument('--file', required=True,
+    #                     help='Input video file')
+    # parser.add_argument('--vtt', dest="vtt", action="store_true",
+    #                     help='Output a vtt file with cue points for individual words instead of a srt file')
+    # args = parser.parse_args()
+    fileName = 'movie.mp4'
+    # args = {"file" : "movie.mp4"}
     
     for x in os.listdir():
         if x.endswith(".pbmm"):
@@ -105,11 +107,11 @@ def main():
     except:
         print("Invalid scorer file. Running inference using only model file\n")
 
-    if os.path.isfile(args.file):
-        input_file = args.file
+    if os.path.isfile(fileName):
+        input_file = fileName
         print("\nInput file:", input_file)
     else:
-        print(args.file, ": No such file exists")
+        print(fileName, ": No such file exists")
         sys.exit(1)
     
     base_directory = os.getcwd()
@@ -118,7 +120,7 @@ def main():
     video_file_name = input_file.split(os.sep)[-1].split(".")[0]
     audio_file_name = os.path.join(audio_directory, video_file_name + ".wav")
     srt_file_name = os.path.join(output_directory, video_file_name + ".srt")
-    srt_extension = ".srt" if not args.vtt else ".vtt"
+    srt_extension = ".srt"
     srt_file_name = os.path.join(output_directory, video_file_name + srt_extension)
 
     # Clean audio/ directory 
@@ -134,10 +136,6 @@ def main():
     # Output SRT or VTT file
     file_handle = open(srt_file_name, "a+")
     file_handle.seek(0)
-
-    if args.vtt:
-        file_handle.write("WEBVTT\n")
-        file_handle.write("Kind: captions\n\n")
     
     print("\nRunning inference:")
     
@@ -146,12 +144,7 @@ def main():
         
         # Dont run inference on the original audio file
         if audio_segment_path.split(os.sep)[-1] != audio_file_name.split(os.sep)[-1]:
-            ds_process_audio(ds, audio_segment_path, file_handle, args.vtt)
-
-    if not args.vtt:        
-        print("\nSRT file saved to", srt_file_name)
-    else:
-        print("\nVTT file saved to", srt_file_name)
+            ds_process_audio(ds, audio_segment_path, file_handle, False)
             
     print("\nSRT file saved to", srt_file_name)
     file_handle.close()

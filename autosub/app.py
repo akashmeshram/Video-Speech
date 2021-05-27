@@ -13,6 +13,7 @@ from jinja2 import escape
 from jinja2.utils import generate_lorem_ipsum
 from flask import Flask, make_response, request, redirect, url_for, abort, session, jsonify
 from flask_ngrok import run_with_ngrok
+from main import main
 
 app = Flask(__name__)
 run_with_ngrok(app)
@@ -25,6 +26,7 @@ def hello():
     if name is None:
         name = request.cookies.get('name', 'Human')
     response = '<h1>Hello, %s!</h1>' % escape(name)  # escape name to avoid XSS
+    main()
     return response
 
 
