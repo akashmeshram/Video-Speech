@@ -12,12 +12,13 @@ except ImportError:
 
 from jinja2 import escape
 from jinja2.utils import generate_lorem_ipsum
-from flask import Flask, make_response, request, redirect, url_for, abort, session, jsonify
+from flask import Flask, make_response, request, redirect, url_for, abort, session, jsonify, render_template
 from flask_ngrok import run_with_ngrok
 from main import main
 import youtube_dl
+from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='./templates')
 run_with_ngrok(app)
 
 # get name value from query string and cookie
@@ -45,12 +46,17 @@ ydl_opts = {
     'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]',
     'outtmpl': 'movie.%(ext)s',
 }
-@app.route('/upload')
+@app.route('/send-url')
 def videoupload():
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
       ydl.download(['https://www.youtube.com/watch?v=rb_hmW-WiQg'])
     response = 'file uploaded successfully'
     return response
+
+@app.route('/upload')
+def upload_file_page():
+    return render_template('upload.html')
+	
 
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
